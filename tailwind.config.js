@@ -1,5 +1,9 @@
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}', './index.html'],
+  content: [
+    './src/**/*.{js,jsx,ts,tsx}',
+    './index.html',
+    './common/**/*.{js,jsx,ts,tsx}',
+  ],
   theme: {
     extend: {
       fontFamily: {
@@ -29,5 +33,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [require('@tailwindcss/forms')], // from common/
 }

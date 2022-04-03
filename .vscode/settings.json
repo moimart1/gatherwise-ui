@@ -1,0 +1,22 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": [
+    "source.organizeImports",
+    "source.fixAll.eslint"
+  ],
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "workbench.colorCustomizations": {
+    // "titleBar.activeForeground": "#000",
+    // "titleBar.inactiveForeground": "#000000CC",
+    "titleBar.activeBackground": "#eb6e25",
+    "titleBar.inactiveBackground": "#eb6e25cc"
+  },
+  "jira-plugin.workingProject": "",
+  "jest.autoRun": "off",
+
+}

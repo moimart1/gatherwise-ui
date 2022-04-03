@@ -1,0 +1,11 @@
+Jenkinsfile
+Dockerfile
+.DS_Store
+.gitignore
+.git/*
+.vscode/*
+node_modules/*
+build/*
+.helm/*
+docker-compose.*
+test/results/*
