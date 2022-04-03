@@ -3,6 +3,7 @@ import { localize } from './libs/localization'
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 import Settings from './pages/Settings'
+import Transactions from './pages/Transactions'
 
 const routes = ({ lang }) => [
   {
@@ -16,6 +17,13 @@ const routes = ({ lang }) => [
     showMenu: false,
     title: localize('settings')(lang),
     element: <Settings />,
+  },
+  {
+    path: '/transactions',
+    menu: {
+      title: localize('transactions')(lang),
+    },
+    element: <Transactions />,
   },
   {
     path: '*',

@@ -8,8 +8,8 @@ const classNames = (...classes) => {
 export default function AppBody({ children, title, subMenuMap }) {
   console.log(`[AppBody] loaded '${title}' with`, subMenuMap)
   return (
-    <div className=''>
-      <header className='bg-white shadow'>
+    <div className='bg-white'>
+      <header className='shadow'>
         <div className='grid grid-cols-3 gap-4 content-center'>
           <div className='max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8'>
             <h2 className='text-2xl font-bold text-gray-900'>{title}</h2>
@@ -40,8 +40,8 @@ export default function AppBody({ children, title, subMenuMap }) {
           </div>
         </div>
       </header>
-      <main>
-        <div className='max-w-7xl mx-auto py-3 sm:px-1 lg:px-2 bg-white'>
+      <main className=''>
+        <div className='max-w-7xl mx-auto py-3 sm:px-1 lg:px-2'>
           <div className='mx-auto px-4 sm:px-1 lg:px-2'>{children}</div>
         </div>
       </main>

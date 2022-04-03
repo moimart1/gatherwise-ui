@@ -1,9 +1,5 @@
 module.exports = {
-  content: [
-    './src/**/*.{js,jsx,ts,tsx}',
-    './index.html',
-    './common/**/*.{js,jsx,ts,tsx}',
-  ],
+  content: ['./src/**/*.{js,jsx,ts,tsx}', './index.html'],
   theme: {
     extend: {
       fontFamily: {
@@ -17,7 +13,7 @@ module.exports = {
       },
       colors: {
         yellowgreen: {
-          // NOTE example of adding custom colour
+          // NOTE example of adding custom color
           DEFAULT: '#90ba00',
           50: '#f9fbf4',
           100: '#f4f8e8',
@@ -30,8 +26,14 @@ module.exports = {
           800: '#186e00',
           900: '#002000',
         },
+        front: {
+          DEFAULT: '#efa304',
+        },
+        back: {
+          DEFAULT: '#191919',
+        },
       },
     },
   },
-  plugins: [require('@tailwindcss/forms')], // from common/
+  plugins: [require('@tailwindcss/forms')],
 }

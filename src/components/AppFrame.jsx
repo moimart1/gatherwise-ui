@@ -40,7 +40,7 @@ export default function AppFrame({
   console.log(`[AppFrame] loaded with`, menuMap)
   return (
     <>
-      <div className='min-h-full w-full' style={{ backgroundColor: '#191919' }}>
+      <div className='min-h-full w-full bg-back'>
         <Disclosure
           key='menu'
           {...{
@@ -77,8 +77,8 @@ export default function AppFrame({
                             className={({ isActive }) => {
                               return classNames(
                                 isActive
-                                  ? 'border-gray-500 text-gray-900'
-                                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                                  ? 'border-white text-white'
+                                  : 'border-transparent text-front hover:text-gray-300 hover:border-gray-300',
                                 'inline-flex items-center px-1 pt-1 border-b-2 text-1xl'
                               )
                             }}
@@ -175,7 +175,7 @@ export default function AppFrame({
                             return classNames(
                               isActive
                                 ? 'bg-gray-100 border-gray-500 text-gray-700 text-2xl'
-                                : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800',
+                                : 'border-transparent text-front hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800',
                               'pl-3 py-2 border-l-4 text-base font-medium'
                             )
                           }}
