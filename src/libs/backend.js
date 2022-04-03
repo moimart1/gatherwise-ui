@@ -1,23 +1,22 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import User, { useUser } from '../services/user'
 import { getBackendUrl } from './urls'
 
 export const Request = async (
   method,
   path,
-  { params, body, needAuthenticated = true, service = '' }
+  { params, body, needAuthenticated = true }
 ) => {
   try {
-    const response = await axios(`${getBackendUrl(service)}${path}`, {
+    const response = await axios(`${getBackendUrl()}${path}`, {
       method,
       params,
       data: body,
       headers: {
-        Authorization:
-          needAuthenticated && User.isLoggedIn()
-            ? `Bearer ${User.getToken()}`
-            : undefined,
+        // Authorization:
+        //   needAuthenticated && User.isLoggedIn()
+        //     ? `Bearer ${User.getToken()}`
+        //     : undefined,
       },
     })
 
@@ -56,7 +55,7 @@ export const useRequest = (crudFunc, { needAuthenticated = true }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState()
   const [ready, setReady] = useState(false)
-  const [, isLoggedIn] = useUser()
+  //const [, isLoggedIn] = useUser()
 
   const clear = () => {
     // clear state
@@ -65,12 +64,12 @@ export const useRequest = (crudFunc, { needAuthenticated = true }) => {
   }
 
   useEffect(() => {
-    setReady(!needAuthenticated || (needAuthenticated && isLoggedIn))
+    setReady(true)
     return () => {
       setReady(false)
       clear()
     }
-  }, [isLoggedIn])
+  }, [needAuthenticated])
 
   return [
     async (...args) => {

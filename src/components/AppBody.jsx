@@ -41,7 +41,7 @@ export default function AppBody({ children, title, subMenuMap }) {
         </div>
       </header>
       <main className=''>
-        <div className='max-w-7xl mx-auto py-3 sm:px-1 lg:px-2'>
+        <div className='max-w-6xl mx-auto py-3 sm:px-1 lg:px-2'>
           <div className='mx-auto px-4 sm:px-1 lg:px-2'>{children}</div>
         </div>
       </main>
