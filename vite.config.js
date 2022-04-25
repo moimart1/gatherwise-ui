@@ -11,6 +11,6 @@ export default defineConfig({
     visualizer({ filename: 'test/results/bundle-stats.html' }),
   ],
   server: {
-    port: '3002',
+    port: '3001',
   },
 })

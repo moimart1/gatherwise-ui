@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { getBackendUrl } from './urls'
 
-export const Request = async (
+export const ApiRequest = async (
   method,
   path,
   { params, body, needAuthenticated = true }
@@ -104,22 +104,22 @@ export const Crud = (basePath, options) => {
   return {
     options,
     create: (data) => {
-      return Request('POST', `${basePath}`, { body: data, ...options })
+      return ApiRequest('POST', `${basePath}`, { body: data, ...options })
     },
     read: (id) => {
-      return Request('GET', `${basePath}/${id}`, options)
+      return ApiRequest('GET', `${basePath}/${id}`, options)
     },
     readAll: (params) => {
-      return Request('GET', `${basePath}`, { params, ...options })
+      return ApiRequest('GET', `${basePath}`, { params, ...options })
     },
     update: (id, data) => {
-      return Request('PATCH', `${basePath}/${id}`, {
+      return ApiRequest('PATCH', `${basePath}/${id}`, {
         body: data,
         ...options,
       })
     },
     delete: (id) => {
-      return Request('DELETE', `${basePath}/${id}`, options)
+      return ApiRequest('DELETE', `${basePath}/${id}`, options)
     },
   }
 }
