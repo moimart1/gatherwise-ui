@@ -13,5 +13,8 @@ export default {
   getContext: () => {
     return ApiRequest('GET', `${basePath}/context`, options)
   },
+  syncToSplitwise: (body) => {
+    return ApiRequest('POST', `${basePath}/splitwise`, { ...options, body })
+  },
   ...useCrud(crud),
 }
