@@ -12,24 +12,24 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { Select } from 'chakra-react-select'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import syncService from '../services/endpoints/synchronizations'
 import transactionsService from '../services/endpoints/transactions'
 
-function ModalDialog({ isOpen, onClose, title, body, footer }) {
-  return (
-    <>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{title}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>{body}</ModalBody>
-          <ModalFooter>{footer}</ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
-  )
+function splitShare(amount, count, precision = 2) {
+  const values = []
+  while (amount > 0 && count > 0) {
+    let share =
+      Math.ceil((amount * Math.pow(10.0, precision)) / count) /
+      Math.pow(10.0, precision)
+
+    amount -= share
+    count--
+
+    values.push(share)
+  }
+
+  return values
 }
 
 function DialogSplitwiseAdd({
@@ -38,12 +38,12 @@ function DialogSplitwiseAdd({
   transaction,
   categories,
   groups,
+  lastSelection,
+  setLastSelection,
 }) {
-  const [members, setMembers] = useState([])
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    console.log(event.target[0])
-  }
+  const [members, setMembers] = useState(lastSelection?.members ?? [])
+  const [error, setError] = useState('')
+  const membersShares = splitShare(Math.abs(transaction.amount), members.length)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -54,26 +54,35 @@ function DialogSplitwiseAdd({
         <form
           p={4}
           onSubmit={(event) => {
+            const { _id: transactionId } = transaction
             const formData = new FormData(event.currentTarget)
             event.preventDefault()
-            //console.log(event.currentTarget)
+
             const data = {
-              ...transaction,
+              transactionId,
               members: formData.getAll('memberId').map((memberId) => {
                 return {
-                  id: memberId,
-                  amount: formData.get(`amount-${memberId}`),
+                  id: parseInt(memberId),
+                  paid: parseFloat(formData.get(`paid-${memberId}`)),
+                  owed: parseFloat(formData.get(`owed-${memberId}`)),
                 }
               }),
-              categoryId: formData.get('categoryId'),
-              groupId: formData.get('groupId'),
+              categoryId: parseInt(formData.get('categoryId')),
+              groupId: parseInt(formData.get('groupId')),
             }
 
             console.log(data)
-            //onClose(event)
+            syncService
+              .syncToSplitwise(data)
+              .then(() => onClose(event))
+              .catch((err) => {
+                console.log(err)
+                setError(String(err))
+              })
           }}
         >
           <ModalBody>
+            <div className='text-red-500'>{error}</div>
             <span>
               Add transaction <Code>{transaction.description}</Code>
             </span>
@@ -84,6 +93,10 @@ function DialogSplitwiseAdd({
               placeholder='Select the category...'
               closeMenuOnSelect={true}
               selectedOptionStyle='check'
+              onChange={(category) => {
+                setLastSelection({ ...lastSelection, category })
+              }}
+              defaultValue={lastSelection?.category}
             />
             <FormLabel>Splitwise group</FormLabel>
             <Select
@@ -92,9 +105,11 @@ function DialogSplitwiseAdd({
               placeholder='Select the group...'
               closeMenuOnSelect={true}
               selectedOptionStyle='check'
-              onChange={(value) => {
-                setMembers(value?.members ?? [])
+              onChange={(group) => {
+                setLastSelection({ ...lastSelection, group })
+                setMembers(group?.members ?? [])
               }}
+              defaultValue={lastSelection?.group}
             />
             <FormLabel>Splitwise members</FormLabel>
             <Select
@@ -107,27 +122,45 @@ function DialogSplitwiseAdd({
               isMulti={true}
               selectedOptionStyle='check'
               onChange={(members) => {
+                setLastSelection({ ...lastSelection, members })
                 setMembers(members ?? [])
               }}
+              defaultValue={lastSelection?.members}
             />
 
             <div className='flex flex-col text-sm p-2'>
               {(members ?? []).map((member, idx) => {
                 return (
                   <div key={idx} className={'flex flex-row w-full'}>
-                    <label htmlFor={`amount-${member.id}`} className={'m-auto'}>
-                      Paid by {member.label}
-                    </label>
-                    <div className='grow'></div>
-                    <input
-                      id={`amount-${member.value}`}
-                      className={'h-8 border-gray-300 rounded'}
-                      name={`amount-${member.value}`}
-                      size={4}
-                      type='number'
-                      readOnly
-                      value={transaction.amount / members?.length ?? 1}
-                    />
+                    <div className='flex flex-row w-full px-2'>
+                      <label htmlFor={`paid-${member.id}`} className={'m-auto'}>
+                        Paid by {member.label}
+                      </label>
+                      <input
+                        id={`paid-${member.value}`}
+                        className={'h-8 border-gray-300 rounded m-auto'}
+                        name={`paid-${member.value}`}
+                        size={4}
+                        type='number'
+                        readOnly
+                        value={Math.abs(idx == 0 ? transaction.amount : 0)} // First member author of transaction
+                      />
+                    </div>
+                    <div className='flex flex-row w-full px-2'>
+                      <label htmlFor={`owed-${member.id}`} className={'m-auto'}>
+                        Owed by {member.label}
+                      </label>
+                      <div className='grow'></div>
+                      <input
+                        id={`owed-${member.value}`}
+                        className={'h-8 border-gray-300 rounded m-auto'}
+                        name={`owed-${member.value}`}
+                        size={4}
+                        type='number'
+                        readOnly
+                        value={membersShares[idx]}
+                      />
+                    </div>
                   </div>
                 )
               })}
@@ -149,6 +182,7 @@ export default function Transactions() {
   const [isLoading, setLoading] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [focusedTransaction, setFocusedTransaction] = useState({})
+  const [lastSelection, setLastSelection] = useState({})
 
   // List transactions
   useEffect(() => {
@@ -231,7 +265,7 @@ export default function Transactions() {
     return () => {
       mounted = false
     }
-  }, [])
+  }, [states.ready])
 
   if (states.loading) return <div>Loading...</div>
   return (
@@ -244,8 +278,8 @@ export default function Transactions() {
       {transactions &&
         Object.keys(transactions).map((transactionDate, index) => {
           return (
-            <>
-              <h2 className='font-bold' key={`titre-${index}`}>
+            <div key={`${index}`}>
+              <h2 className='font-bold' key={`title-${index}`}>
                 {transactionDate}
               </h2>
               <div className='max-w-md flex flex-col'>
@@ -259,16 +293,22 @@ export default function Transactions() {
                         onOpen(event)
                       }}
                     >
-                      <div className='text-left font-bold'>
-                        {/* TODO add a modal to add to Splitwise */}
-                        {transaction.description}
+                      <div className='text-left'>
+                        <div className=' font-bold'>
+                          {transaction.description}
+                        </div>
+                        <div className='italic'>
+                          {transaction?.sync
+                            ?.map((sync) => sync.outputName)
+                            .join(', ')}
+                        </div>
                       </div>
                       <div className='text-right'>{transaction.amount}$</div>
                     </button>
                   )
                 })}
               </div>
-            </>
+            </div>
           )
         })}
       <DialogSplitwiseAdd
@@ -277,6 +317,8 @@ export default function Transactions() {
         transaction={focusedTransaction}
         categories={context.categories}
         groups={context.groups}
+        lastSelection={lastSelection}
+        setLastSelection={setLastSelection}
       />
     </div>
   )

@@ -32,14 +32,15 @@ export const ApiRequest = async (
     }
     return response.data
   } catch (err) {
+    console.error('[ApiRequest]', err)
     // Manage special case
     if (err.response?.data?.error?.code === 'VALIDATION_FAILED') {
       const details = (err.response.data.error.details ?? []).map(
         (item) => item?.message
       )
       throw new Error(details.join('\n'))
-    } else if (err.response?.data?.error?.code === 'BadRequestException') {
-      throw new Error(`${err.response.data.error.message}`)
+    } else if (err.code === 'ERR_BAD_REQUEST' && err.response?.data?.error) {
+      throw new Error(`${err.response.data.error?.message}`)
     }
 
     throw err

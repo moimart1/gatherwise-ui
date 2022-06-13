@@ -1,4 +1,3 @@
-import React from 'react'
 import { allLanguages } from '../libs/localization'
 
 export default function LanguageSelect({ lang, onChangeLanguage }) {
