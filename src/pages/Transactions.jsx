@@ -19,9 +19,7 @@ import transactionsService from '../services/endpoints/transactions'
 function splitShare(amount, count, precision = 2) {
   const values = []
   while (amount > 0 && count > 0) {
-    let share =
-      Math.ceil((amount * Math.pow(10.0, precision)) / count) /
-      Math.pow(10.0, precision)
+    let share = Math.ceil((amount * Math.pow(10.0, precision)) / count) / Math.pow(10.0, precision)
 
     amount -= share
     count--
@@ -32,15 +30,7 @@ function splitShare(amount, count, precision = 2) {
   return values
 }
 
-function DialogSplitwiseAdd({
-  isOpen,
-  onClose,
-  transaction,
-  categories,
-  groups,
-  lastSelection,
-  setLastSelection,
-}) {
+function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, lastSelection, setLastSelection }) {
   const [members, setMembers] = useState(lastSelection?.members ?? [])
   const [error, setError] = useState('')
   const membersShares = splitShare(Math.abs(transaction.amount), members.length)
@@ -218,27 +208,21 @@ export default function Transactions() {
       if (mounted) {
         setLoading(false)
         setContext({
-          categories: (data?.categories ?? []).reduce(
-            (categories, category) => {
-              categories.push({
-                label: category.name,
-                options: (category?.subcategories ?? []).reduce(
-                  (subcategories, subcategory) => {
-                    subcategories.push({
-                      label: subcategory.name,
-                      value: subcategory.id,
-                    })
+          categories: (data?.categories ?? []).reduce((categories, category) => {
+            categories.push({
+              label: category.name,
+              options: (category?.subcategories ?? []).reduce((subcategories, subcategory) => {
+                subcategories.push({
+                  label: subcategory.name,
+                  value: subcategory.id,
+                })
 
-                    return subcategories
-                  },
-                  []
-                ),
-              })
+                return subcategories
+              }, []),
+            })
 
-              return categories
-            },
-            []
-          ),
+            return categories
+          }, []),
           // Groups //
           groups: (data?.groups ?? []).reduce((groups, group) => {
             groups.push({
@@ -246,9 +230,7 @@ export default function Transactions() {
               value: group.id,
               members: (group?.members ?? []).reduce((members, member) => {
                 members.push({
-                  label: `${member.first_name ? member.first_name : ''} ${
-                    member.last_name ? member.last_name : ''
-                  }`,
+                  label: `${member.first_name ? member.first_name : ''} ${member.last_name ? member.last_name : ''}`,
                   value: member.id,
                 })
 
@@ -270,11 +252,7 @@ export default function Transactions() {
   if (states.loading) return <div>Loading...</div>
   return (
     <div className=''>
-      {isLoading ? (
-        <span className='italic p-3'>Loading...</span>
-      ) : (
-        <span></span>
-      )}
+      {isLoading ? <span className='italic p-3'>Loading...</span> : <span></span>}
       {transactions &&
         Object.keys(transactions).map((transactionDate, index) => {
           return (
@@ -294,14 +272,8 @@ export default function Transactions() {
                       }}
                     >
                       <div className='text-left'>
-                        <div className=' font-bold'>
-                          {transaction.description}
-                        </div>
-                        <div className='italic'>
-                          {transaction?.sync
-                            ?.map((sync) => sync.outputName)
-                            .join(', ')}
-                        </div>
+                        <div className=' font-bold'>{transaction.description}</div>
+                        <div className='italic'>{transaction?.sync?.map((sync) => sync.outputName).join(', ')}</div>
                       </div>
                       <div className='text-right'>{transaction.amount}$</div>
                     </button>

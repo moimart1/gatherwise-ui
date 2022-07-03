@@ -6,9 +6,7 @@ const NotFound = ({ children, lang }) => {
   const location = useLocation()
   return (
     <div className='w-full text-center p-8'>
-      <p className='text-xl font-bold text-gray-400'>
-        {localize('not found')(lang)}
-      </p>
+      <p className='text-xl font-bold text-gray-400'>{localize('not found')(lang)}</p>
       <p>{location.pathname}</p>
 
       <div className='p-8'>

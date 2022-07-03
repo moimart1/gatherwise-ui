@@ -12,12 +12,7 @@ const classNames = (...classes) => {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function AppFrame({
-  children,
-  sitePreferences,
-  menuMap,
-  onChangeLanguage,
-}) {
+export default function AppFrame({ children, sitePreferences, menuMap, onChangeLanguage }) {
   const lang = useContext(LanguageContext)
   const [user, setUser] = useState({
     avatar: (
@@ -55,16 +50,8 @@ export default function AppFrame({
                   <div className='flex items-center space-x-3'>
                     <div className='flex-shrink-0 flex items-center'>
                       <NavLink to={`/`}>
-                        <img
-                          className='block lg:hidden h-8 w-auto'
-                          src={sitePreferences.logo}
-                          alt='logo'
-                        />
-                        <img
-                          className='hidden lg:block h-8 w-auto'
-                          src={sitePreferences.logo}
-                          alt='logo'
-                        />
+                        <img className='block lg:hidden h-8 w-auto' src={sitePreferences.logo} alt='logo' />
+                        <img className='hidden lg:block h-8 w-auto' src={sitePreferences.logo} alt='logo' />
                       </NavLink>
                     </div>
                     <div className='hidden sm:-my-px sm:ml-2 sm:flex lg:space-x-3 sm:space-x-1'>
@@ -109,25 +96,17 @@ export default function AppFrame({
                           leaveTo='transform opacity-0 scale-95'
                         >
                           <Menu.Items className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50'>
-                            <div className='px-2 pt-2 text-center'>
-                              {user.name}
-                            </div>
+                            <div className='px-2 pt-2 text-center'>{user.name}</div>
 
                             <div className='px-4 py-2 text-sm text-gray-700'>
-                              <LanguageSelect
-                                lang={lang}
-                                onChangeLanguage={onChangeLanguage}
-                              />
+                              <LanguageSelect lang={lang} onChangeLanguage={onChangeLanguage} />
                             </div>
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
                                   <Link
                                     to={item.href}
-                                    className={classNames(
-                                      active ? 'bg-gray-100' : '',
-                                      'block px-4 py-2 text-sm text-gray-700'
-                                    )}
+                                    className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                                   >
                                     {item.name}
                                   </Link>
@@ -149,10 +128,7 @@ export default function AppFrame({
                       {open ? (
                         <XIcon className='block h-6 w-6' aria-hidden='true' />
                       ) : (
-                        <MenuIcon
-                          className='block h-6 w-6'
-                          aria-hidden='true'
-                        />
+                        <MenuIcon className='block h-6 w-6' aria-hidden='true' />
                       )}
                     </Disclosure.Button>
                   </div>
@@ -163,10 +139,7 @@ export default function AppFrame({
                 <div className='pt-2 pb-3 space-y-1 border'>
                   {menuMap.map((item) => {
                     return (
-                      <Disclosure.Button
-                        key={`button-${item.path}`}
-                        className='block pl-3 py-1 w-screen text-left items-stretch'
-                      >
+                      <Disclosure.Button key={`button-${item.path}`} className='block pl-3 py-1 w-screen text-left items-stretch'>
                         <NavLink
                           end={['', '/'].includes(item.path)}
                           key={`navlink-${item.path}`}
@@ -190,12 +163,8 @@ export default function AppFrame({
                   <div className='flex items-center px-4'>
                     <div className='flex-shrink-0'>{user.avatar}</div>
                     <div className='ml-3'>
-                      <div className='text-base font-medium text-gray-800'>
-                        {user.name}
-                      </div>
-                      <div className='text-sm font-medium text-gray-500'>
-                        {user.email}
-                      </div>
+                      <div className='text-base font-medium text-gray-800'>{user.name}</div>
+                      <div className='text-sm font-medium text-gray-500'>{user.email}</div>
                     </div>
                     <button
                       type='button'
@@ -207,10 +176,7 @@ export default function AppFrame({
                   </div>
                   <div className='mt-3 space-y-1'>
                     <div className='px-4 py-2 text-sm text-gray-700'>
-                      <LanguageSelect
-                        lang={lang}
-                        onChangeLanguage={onChangeLanguage}
-                      />
+                      <LanguageSelect lang={lang} onChangeLanguage={onChangeLanguage} />
                     </div>
                     {userNavigation.map((item) => (
                       <Disclosure.Button
@@ -236,8 +202,5 @@ export default function AppFrame({
 }
 
 AppFrame.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.element),
-    PropTypes.element,
-  ]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.element), PropTypes.element]).isRequired,
 }

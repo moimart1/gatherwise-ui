@@ -21,9 +21,7 @@ export default function AppBody({ children, title, subMenuMap }) {
                   <NavLink
                     end={['', '/'].includes(item.path)}
                     key={`path-${item.path}`}
-                    to={`${item.basename ? item.basename + '/' : ''}${
-                      item.path
-                    }`}
+                    to={`${item.basename ? item.basename + '/' : ''}${item.path}`}
                     className={({ isActive }) => {
                       return classNames(
                         isActive
@@ -50,9 +48,6 @@ export default function AppBody({ children, title, subMenuMap }) {
 }
 
 AppBody.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.element),
-    PropTypes.element,
-  ]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.element), PropTypes.element]).isRequired,
   title: PropTypes.string.isRequired,
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useRoutes } from 'react-router-dom'
 import './App.css'
 import AuthProvider from './components/AuthProvider'
@@ -21,9 +21,7 @@ function App() {
     setLang(event.target.value)
   }
 
-  const currentPage = useRoutes(
-    compileRoutes(routes({ lang }), { sitePreferences, onChangeLanguage })
-  )
+  const currentPage = useRoutes(compileRoutes(routes({ lang }), { sitePreferences, onChangeLanguage }))
 
   return (
     <>

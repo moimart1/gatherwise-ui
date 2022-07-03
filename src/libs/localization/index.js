@@ -45,8 +45,7 @@ export const allLanguages = [
 ]
 
 export const getLanguageInfoById = ({ id }) => {
-  const chosenLang =
-    allLanguages.find((langItem) => langItem.id === id) || allLanguages[0] // NOTE: use English as fallback
+  const chosenLang = allLanguages.find((langItem) => langItem.id === id) || allLanguages[0] // NOTE: use English as fallback
   return { allLanguages, chosenLang }
 }
 

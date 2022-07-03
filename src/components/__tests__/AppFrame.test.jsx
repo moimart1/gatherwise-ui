@@ -31,10 +31,7 @@ beforeAll(() => {
 
   render(
     <BrowserRouter>
-      <AppFrame
-        menuMap={navigation}
-        sitePreferences={{ title: 'TEST', logo: '' }}
-      >
+      <AppFrame menuMap={navigation} sitePreferences={{ title: 'TEST', logo: '' }}>
         <a> Test </a>
       </AppFrame>
     </BrowserRouter>

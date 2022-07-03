@@ -2,11 +2,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { getBackendUrl } from './urls'
 
-export const ApiRequest = async (
-  method,
-  path,
-  { params, body, needAuthenticated = true }
-) => {
+export const ApiRequest = async (method, path, { params, body, needAuthenticated = true }) => {
   try {
     const response = await axios(`${getBackendUrl()}${path}`, {
       method,
@@ -35,9 +31,7 @@ export const ApiRequest = async (
     console.error('[ApiRequest]', err)
     // Manage special case
     if (err.response?.data?.error?.code === 'VALIDATION_FAILED') {
-      const details = (err.response.data.error.details ?? []).map(
-        (item) => item?.message
-      )
+      const details = (err.response.data.error.details ?? []).map((item) => item?.message)
       throw new Error(details.join('\n'))
     } else if (err.code === 'ERR_BAD_REQUEST' && err.response?.data?.error) {
       throw new Error(`${err.response.data.error?.message}`)

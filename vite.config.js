@@ -5,11 +5,7 @@ import eslintPlugin from 'vite-plugin-eslint'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    eslintPlugin({ cache: false }),
-    visualizer({ filename: 'test/results/bundle-stats.html' }),
-  ],
+  plugins: [react(), eslintPlugin({ cache: false }), visualizer({ filename: 'test/results/bundle-stats.html' })],
   server: {
     port: '3001',
   },

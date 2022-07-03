@@ -6,10 +6,7 @@ export default function SearchBar({ searchQuery, onSearchQuery }) {
   return (
     <div className='relative'>
       <form onSubmit={(input) => console.log(input)}>
-        <FontAwesomeIcon
-          className='absolute fa fa-search text-gray-400 top-4 left-4'
-          icon={faSearch}
-        />
+        <FontAwesomeIcon className='absolute fa fa-search text-gray-400 top-4 left-4' icon={faSearch} />
         <input
           type='text'
           placeholder='Search'
@@ -24,9 +21,5 @@ export default function SearchBar({ searchQuery, onSearchQuery }) {
 
 export function SearchTags({ children, query, tags }) {
   const strTags = tags.join(', ').toLowerCase()
-  return !query || !!strTags.includes(query.toLowerCase()) ? (
-    <>{children}</>
-  ) : (
-    <></>
-  )
+  return !query || !!strTags.includes(query.toLowerCase()) ? <>{children}</> : <></>
 }

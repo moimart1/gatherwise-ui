@@ -40,9 +40,7 @@ export function compileRoutes(routes, frameProps) {
           title: routeMap.menu.title,
           logo: routeMap.menu?.logo,
           path: routeMap.path,
-          basename: compiledPath(
-            parentContext.basename ? parentContext.basename : ''
-          ),
+          basename: compiledPath(parentContext.basename ? parentContext.basename : ''),
         })
       }
 
@@ -53,9 +51,7 @@ export function compileRoutes(routes, frameProps) {
           title: routeMap.submenu.title,
           logo: routeMap.submenu?.logo,
           path: routeMap.path,
-          basename: compiledPath(
-            parentContext.basename ? parentContext.basename : ''
-          ),
+          basename: compiledPath(parentContext.basename ? parentContext.basename : ''),
         })
       }
 
@@ -63,9 +59,7 @@ export function compileRoutes(routes, frameProps) {
         // Create context shared with children routes
         title: routeMap?.title ?? routeMap?.menu?.title ?? parentContext.title,
         subMenuMap: [],
-        basename:
-          (parentContext.basename ? parentContext.basename + '/' : '') +
-          routeMap.path,
+        basename: (parentContext.basename ? parentContext.basename + '/' : '') + routeMap.path,
       }
 
       if (Array.isArray(routeMap?.children)) {
@@ -76,15 +70,11 @@ export function compileRoutes(routes, frameProps) {
       if (routeMap?.element) {
         if (routeMap?.wrapFrame === undefined || routeMap?.wrapFrame) {
           // Add frame is not defined or enabled
-          const showMenu =
-            routeMap?.showMenu === undefined || routeMap?.showMenu
+          const showMenu = routeMap?.showMenu === undefined || routeMap?.showMenu
 
           routeMap.element = (
             <AppFrame menuMap={showMenu ? menuMap : []} {...frameProps}>
-              <AppBody
-                title={context.title}
-                subMenuMap={parentContext.subMenuMap}
-              >
+              <AppBody title={context.title} subMenuMap={parentContext.subMenuMap}>
                 {routeMap.element}
               </AppBody>
             </AppFrame>

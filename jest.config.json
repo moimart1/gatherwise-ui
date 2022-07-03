@@ -1,12 +1,8 @@
 {
   "verbose": true,
   "testRegex": ".*\\.test\\.js[x]?$",
-  "testPathIgnorePatterns": [
-    "/node_modules/"
-  ],
-  "roots": [
-    "<rootDir>/src/"
-  ],
+  "testPathIgnorePatterns": ["/node_modules/"],
+  "roots": ["<rootDir>/src/"],
   "testEnvironment": "jsdom",
   "transform": {
     "\\.(js|jsx)$": "babel-jest",

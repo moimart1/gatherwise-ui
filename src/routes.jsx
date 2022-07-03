@@ -1,6 +1,6 @@
-import React from 'react'
 import { localize } from './libs/localization'
 import Home from './pages/Home'
+import Import from './pages/Import'
 import NotFound from './pages/NotFound'
 import Settings from './pages/Settings'
 import Transactions from './pages/Transactions'
@@ -17,6 +17,13 @@ const routes = ({ lang }) => [
     showMenu: false,
     title: localize('settings')(lang),
     element: <Settings />,
+  },
+  {
+    path: '/imports',
+    menu: {
+      title: localize('Import')(lang),
+    },
+    element: <Import />,
   },
   {
     path: '/transactions',
