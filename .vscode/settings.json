@@ -18,5 +18,5 @@
   },
   "jira-plugin.workingProject": "",
   "jest.autoRun": "off",
-
+  "editor.rulers": [130]
 }

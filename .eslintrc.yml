@@ -8,6 +8,7 @@ extends:
   - plugin:react/recommended
   # import plugin includes check for valid path in import statements
   - plugin:import/recommended
+  - prettier
 parserOptions:
   ecmaFeatures:
     jsx: true
@@ -26,9 +27,8 @@ rules:
   react/prop-types: 0
   react/state-in-constructor: 0
   react/display-name: 0
+  react/react-in-jsx-scope: off
   no-unused-vars: warn
-  react/jsx-uses-react: 0
-  react/react-in-jsx-scope: 0
 settings:
   react:
     version: detect
