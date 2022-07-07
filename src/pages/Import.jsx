@@ -1,29 +1,26 @@
-import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import FileUpload from '../components/FileUpload'
+import { useImportService } from '../services/endpoints/importations'
 
 export default function Import() {
-  const {
-    handleSubmit,
-    register,
-    setError,
-    control,
-    formState: { errors, isSubmitting },
-  } = useForm()
+  const { register, handleSubmit } = useForm()
+  const importService = useImportService()
 
-  useEffect(() => {
-    let mounted = true
+  const onSubmit = async (data) => {
+    const formData = new FormData()
+    formData.append('file', data.file[0])
 
-    return () => {
-      mounted = false
-    }
-  }, [])
+    const res = await importService.uploadFile(formData)
+
+    alert(JSON.stringify(`${res.message}, status: ${res.status}`))
+  }
 
   return (
     <div className=''>
-      <FileUpload name='avatar' acceptedFileTypes='*/*' isRequired={true} placeholder='Transactions' control={control}>
-        New avatar
-      </FileUpload>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input type='file' {...register('file')} />
+
+        <input type='submit' />
+      </form>
     </div>
   )
 }

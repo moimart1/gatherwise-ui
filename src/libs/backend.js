@@ -1,140 +1,54 @@
 import axios from 'axios'
-import { useEffect, useState } from 'react'
-import { getBackendUrl } from './urls'
+import { useEffect, useRef } from 'react'
 
-export const ApiRequest = async (method, path, { params, body, needAuthenticated = true }) => {
-  try {
-    const response = await axios(`${getBackendUrl()}${path}`, {
-      method,
-      params,
-      data: body,
-      headers: {
-        // Authorization:
-        //   needAuthenticated && User.isLoggedIn()
-        //     ? `Bearer ${User.getToken()}`
-        //     : undefined,
-      },
-    })
-
-    // Manage different id names (Loopback vs NestJS)
-    // Transform 'id' to '_id'
-    if (response.data?.id) {
-      response.data._id = response.data.id
-      delete response.data.id
-    } else if (Array.isArray(response.data) && response.data?.[0]?.id) {
-      response.data = response.data.map((item) => {
-        return { ...item, id: undefined, _id: item.id }
-      })
-    }
-    return response.data
-  } catch (err) {
-    console.error('[ApiRequest]', err)
-    // Manage special case
-    if (err.response?.data?.error?.code === 'VALIDATION_FAILED') {
-      const details = (err.response.data.error.details ?? []).map((item) => item?.message)
-      throw new Error(details.join('\n'))
-    } else if (err.code === 'ERR_BAD_REQUEST' && err.response?.data?.error) {
-      throw new Error(`${err.response.data.error?.message}`)
-    }
-
-    throw err
-  }
-}
-
-/**
- *
- * @param {function} crudFunc
- * @returns {Array} Returns callRequest function, loading, error, ready states and clear function
- */
-export const useRequest = (crudFunc, { needAuthenticated = true }) => {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState()
-  const [ready, setReady] = useState(false)
-  //const [, isLoggedIn] = useUser()
-
-  const clear = () => {
-    // clear state
-    setLoading(false)
-    setError(undefined)
-  }
+export const useBackendRequest = () => {
+  const axiosInstance = useRef()
+  const baseUrl = 'http://localhost:3000/api' // TODO magic string
+  const isReady = true
 
   useEffect(() => {
-    setReady(true)
+    if (!isReady) return // Authenticated request required for backend
+    console.log('[useBackendRequest] instantiated')
+    axiosInstance.current = axios.create({
+      baseURL: baseUrl,
+      headers: {},
+    })
+
+    axiosInstance.current.interceptors.response.use((response) => {
+      return response.data
+    })
+
     return () => {
-      setReady(false)
-      clear()
+      console.log('[useBackendRequest] cleaned')
+      axiosInstance.current = undefined
     }
-  }, [needAuthenticated])
+  }, [baseUrl])
 
-  return [
-    async (...args) => {
-      let response = undefined
-      setError(undefined)
-      setLoading(true)
-
-      try {
-        if (!ready) {
-          setLoading(false)
-          return response
-        }
-
-        response = await crudFunc(...args)
-      } catch (err) {
-        setError(err)
-      }
-
-      setLoading(false)
-      return response
-    },
-    {
-      loading,
-      error,
-      ready,
-    },
-    clear,
-  ]
+  return { axiosInstance, isReady }
 }
 
-export const Crud = (basePath, options) => {
-  return {
-    options,
-    create: (data) => {
-      return ApiRequest('POST', `${basePath}`, { body: data, ...options })
-    },
-    read: (id) => {
-      return ApiRequest('GET', `${basePath}/${id}`, options)
-    },
-    readAll: (params) => {
-      return ApiRequest('GET', `${basePath}`, { params, ...options })
-    },
-    update: (id, data) => {
-      return ApiRequest('PATCH', `${basePath}/${id}`, {
-        body: data,
-        ...options,
-      })
-    },
-    delete: (id) => {
-      return ApiRequest('DELETE', `${basePath}/${id}`, options)
-    },
-  }
-}
+export const useCrudBackend = (basePath) => {
+  const { axiosInstance, isReady } = useBackendRequest()
 
-export const useCrud = (crud) => {
   return {
-    useCreate: () => {
-      return useRequest(crud.create, crud.options)
-    },
-    useRead: () => {
-      return useRequest(crud.read, crud.options)
-    },
-    useReadAll: () => {
-      return useRequest(crud.readAll, crud.options)
-    },
-    useUpdate: () => {
-      return useRequest(crud.update, crud.options)
-    },
-    useDelete: () => {
-      return useRequest(crud.delete, crud.options)
+    backendRequest: axiosInstance,
+    endpoints: {
+      isReady,
+      create: async (data) => {
+        return await axiosInstance.current.post(basePath, data)
+      },
+      read: async (id) => {
+        return await axiosInstance.current.get(`${basePath}/${id}`)
+      },
+      readAll: async (params) => {
+        return await axiosInstance.current.get(`${basePath}`, { params })
+      },
+      update: async (id, data, params = {}) => {
+        return await axiosInstance.current.patch(`${basePath}/${id}`, data, { params })
+      },
+      delete: async (id, params = {}) => {
+        return await axiosInstance.current.delete(`${basePath}/${id}`, { params })
+      },
     },
   }
 }

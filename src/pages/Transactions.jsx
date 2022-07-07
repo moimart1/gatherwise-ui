@@ -13,8 +13,8 @@ import {
 } from '@chakra-ui/react'
 import { Select } from 'chakra-react-select'
 import { useEffect, useState } from 'react'
-import syncService from '../services/endpoints/synchronizations'
-import transactionsService from '../services/endpoints/transactions'
+import { useSynchronizationService } from '../services/endpoints/synchronizations'
+import { useTransactionService } from '../services/endpoints/transactions'
 
 function splitShare(amount, count, precision = 2) {
   const values = []
@@ -34,6 +34,7 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
   const [members, setMembers] = useState(lastSelection?.members ?? [])
   const [error, setError] = useState('')
   const membersShares = splitShare(Math.abs(transaction.amount), members.length)
+  const synchronizationService = useSynchronizationService()
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -62,7 +63,7 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
             }
 
             console.log(data)
-            syncService
+            synchronizationService
               .syncToSplitwise(data)
               .then(() => onClose(event))
               .catch((err) => {
@@ -166,20 +167,21 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
 }
 
 export default function Transactions() {
-  const [transactionsRequest, states] = transactionsService.useReadAll()
   const [transactions, setTransactions] = useState([])
   const [context, setContext] = useState({})
   const [isLoading, setLoading] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [focusedTransaction, setFocusedTransaction] = useState({})
   const [lastSelection, setLastSelection] = useState({})
+  const transactionService = useTransactionService()
+  const synchronizationService = useSynchronizationService()
 
   // List transactions
   useEffect(() => {
     let mounted = true
-    if (!states.ready) return
+    if (!transactionService.isReady) return
 
-    transactionsRequest({ limit: 20 }).then((data) => {
+    transactionService.readAll({ limit: 20 }).then((data) => {
       if (mounted) {
         console.log(data)
         setTransactions(
@@ -198,13 +200,13 @@ export default function Transactions() {
     return () => {
       mounted = false
     }
-  }, [states.ready])
+  }, [transactionService.isReady])
 
   // Get context
   useEffect(() => {
     let mounted = true
     setLoading(true)
-    syncService.getContext().then((data) => {
+    synchronizationService.getContext().then((data) => {
       if (mounted) {
         setLoading(false)
         setContext({
@@ -247,9 +249,8 @@ export default function Transactions() {
     return () => {
       mounted = false
     }
-  }, [states.ready])
+  }, [synchronizationService.isReady])
 
-  if (states.loading) return <div>Loading...</div>
   return (
     <div className=''>
       {isLoading ? <span className='italic p-3'>Loading...</span> : <span></span>}

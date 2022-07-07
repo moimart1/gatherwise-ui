@@ -1,20 +1,16 @@
-import { ApiRequest, Crud, useCrud } from '../../libs/backend'
+import { useCrudBackend } from '../../libs/backend'
 
 const basePath = '/synchronizations'
-const options = {
-  needAuthenticated: false,
-}
 
-const crud = Crud(basePath, options)
-
-export default {
-  basePath,
-  ...crud,
-  getContext: () => {
-    return ApiRequest('GET', `${basePath}/context`, options)
-  },
-  syncToSplitwise: (body) => {
-    return ApiRequest('POST', `${basePath}/splitwise`, { ...options, body })
-  },
-  ...useCrud(crud),
+export function useSynchronizationService() {
+  const { backendRequest, endpoints } = useCrudBackend(basePath)
+  return {
+    ...endpoints,
+    getContext: async () => {
+      return await backendRequest.current.get(`${basePath}/context`)
+    },
+    syncToSplitwise: async (data) => {
+      return await backendRequest.current.post(`${basePath}/splitwise`, data)
+    },
+  }
 }
