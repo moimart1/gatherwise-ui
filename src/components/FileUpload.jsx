@@ -27,13 +27,19 @@ export const FileUpload = ({ name, placeholder, acceptedFileTypes, control, chil
           onChange={(e) => onChange(e.target.files[0])}
           accept={acceptedFileTypes}
           name={name}
-          ref={inputRef}
+          ref={(e) => {
+            console.log('ref', e)
+            inputRef.current = e
+          }}
           {...inputProps}
           style={{ display: 'none' }}
         />
         <Input
           placeholder={placeholder || 'Your file ...'}
-          onClick={() => inputRef.current.click()}
+          onClick={() => {
+            console.log(inputRef.current)
+            inputRef.current.click()
+          }}
           // onChange={(e) => {}}
           readOnly={true}
           value={(value && value.name) || ''}
