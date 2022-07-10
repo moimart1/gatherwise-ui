@@ -24,12 +24,13 @@ const author = 'Martin'
 function splitShare(amount, count, precision = 2) {
   const values = []
   while (amount > 0 && count > 0) {
-    let share = Math.ceil((amount * Math.pow(10.0, precision)) / count) / Math.pow(10.0, precision)
+    let share = Math.floor((amount * Math.pow(10.0, precision)) / count) / Math.pow(10.0, precision)
 
     amount -= share
     count--
 
-    values.push(share)
+    // last share when share > amount
+    values.push(share > amount ? share + amount : share)
   }
 
   return values
@@ -38,12 +39,18 @@ function splitShare(amount, count, precision = 2) {
 function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, lastSelection, setLastSelection }) {
   const [members, setMembers] = useState(lastSelection?.members ?? [])
   const [error, setError] = useState('')
+  const [note, setNote] = useState('')
   const membersShares = splitShare(Math.abs(transaction.amount), members.length)
   const synchronizationService = useSynchronizationService()
   const transactionService = useTransactionService()
+  const cleanThenClose = () => {
+    setNote('')
+    setError('')
+    onClose()
+  }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={cleanThenClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Sync transaction</ModalHeader>
@@ -66,11 +73,12 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
               }),
               categoryId: parseInt(formData.get('categoryId')),
               groupId: parseInt(formData.get('groupId')),
+              note,
             }
 
             synchronizationService
               .syncToSplitwise(data)
-              .then(() => onClose(event))
+              .then(() => cleanThenClose(event))
               .catch((err) => {
                 console.log(err)
                 setError(String(err))
@@ -139,8 +147,7 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
                         name={`paid-${member.value}`}
                         size={4}
                         type='number'
-                        readOnly
-                        value={Math.abs(idx == 0 ? transaction.amount : 0)} // First member author of transaction
+                        defaultValue={Math.abs(idx == 0 ? transaction.amount : 0)} // First member author of transaction
                       />
                     </div>
                     <div className='flex flex-row w-full px-2'>
@@ -154,13 +161,22 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
                         name={`owed-${member.value}`}
                         size={4}
                         type='number'
-                        readOnly
-                        value={membersShares[idx]}
+                        defaultValue={membersShares[idx]}
                       />
                     </div>
                   </div>
                 )
               })}
+              <div>
+                <textarea
+                  id='note'
+                  cols={20}
+                  rows={3}
+                  className={'w-full'}
+                  value={note}
+                  onInput={(event) => setNote(event.target.value)}
+                />
+              </div>
             </div>
           </ModalBody>
           <ModalFooter>
@@ -168,8 +184,8 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
               className='m-1'
               type='button'
               onClick={() => {
-                transactionService.update(transaction._id, { reviewed: true }).then(() => {
-                  onClose()
+                transactionService.update(transaction._id, { reviewed: true, note }).then(() => {
+                  cleanThenClose()
                 })
               }}
             >
@@ -202,7 +218,7 @@ export default function Transactions() {
     let mounted = true
     if (!transactionService.isReady) return
 
-    transactionService.readAll({ limit: 20 }).then((data) => {
+    transactionService.readAll({ limit: 500 }).then((data) => {
       if (mounted) {
         console.log(data)
         setTransactions(
