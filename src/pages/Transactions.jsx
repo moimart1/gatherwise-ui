@@ -16,6 +16,11 @@ import { useEffect, useState } from 'react'
 import { useSynchronizationService } from '../services/endpoints/synchronizations'
 import { useTransactionService } from '../services/endpoints/transactions'
 
+const author = 'Martin'
+
+// Banque 30 décembre Costco
+// Communauto 31 décembre
+
 function splitShare(amount, count, precision = 2) {
   const values = []
   while (amount > 0 && count > 0) {
@@ -35,6 +40,7 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
   const [error, setError] = useState('')
   const membersShares = splitShare(Math.abs(transaction.amount), members.length)
   const synchronizationService = useSynchronizationService()
+  const transactionService = useTransactionService()
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -62,7 +68,6 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
               groupId: parseInt(formData.get('groupId')),
             }
 
-            console.log(data)
             synchronizationService
               .syncToSplitwise(data)
               .then(() => onClose(event))
@@ -75,7 +80,7 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
           <ModalBody>
             <div className='text-red-500'>{error}</div>
             <span>
-              Add transaction <Code>{transaction.description}</Code>
+              Add transaction <Code>{transaction.description}</Code> of {transaction.amount}$
             </span>
             <FormLabel>Splitwise category</FormLabel>
             <Select
@@ -99,6 +104,7 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
               onChange={(group) => {
                 setLastSelection({ ...lastSelection, group })
                 setMembers(group?.members ?? [])
+                console.log(group?.members)
               }}
               defaultValue={lastSelection?.group}
             />
@@ -158,7 +164,20 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button type='submit'>Add</Button>
+            <Button
+              className='m-1'
+              type='button'
+              onClick={() => {
+                transactionService.update(transaction._id, { reviewed: true }).then(() => {
+                  onClose()
+                })
+              }}
+            >
+              Reviewed
+            </Button>
+            <Button className='m-1' type='submit'>
+              Add
+            </Button>
           </ModalFooter>
         </form>
       </ModalContent>
@@ -170,11 +189,13 @@ export default function Transactions() {
   const [transactions, setTransactions] = useState([])
   const [context, setContext] = useState({})
   const [isLoading, setLoading] = useState(false)
+  const [reloadTransaction, setReloadTransaction] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [focusedTransaction, setFocusedTransaction] = useState({})
   const [lastSelection, setLastSelection] = useState({})
   const transactionService = useTransactionService()
   const synchronizationService = useSynchronizationService()
+  const trigReloadTransaction = () => setReloadTransaction(!reloadTransaction)
 
   // List transactions
   useEffect(() => {
@@ -200,7 +221,7 @@ export default function Transactions() {
     return () => {
       mounted = false
     }
-  }, [transactionService.isReady])
+  }, [transactionService.isReady, reloadTransaction])
 
   // Get context
   useEffect(() => {
@@ -230,14 +251,19 @@ export default function Transactions() {
             groups.push({
               label: group.name,
               value: group.id,
-              members: (group?.members ?? []).reduce((members, member) => {
-                members.push({
-                  label: `${member.first_name ? member.first_name : ''} ${member.last_name ? member.last_name : ''}`,
-                  value: member.id,
-                })
+              members: (group?.members ?? [])
+                .reduce((members, member) => {
+                  members.push({
+                    label: `${member.first_name ? member.first_name : ''} ${member.last_name ? member.last_name : ''}`,
+                    value: member.id,
+                  })
 
-                return members
-              }, []),
+                  return members
+                }, [])
+                .sort((x, y) => {
+                  // Workaround to put author at the top // TODO hackish
+                  return x.label.includes(author) ? -1 : y.label.includes(author) ? 1 : 0
+                }),
             })
 
             return groups
@@ -286,7 +312,10 @@ export default function Transactions() {
         })}
       <DialogSplitwiseAdd
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={() => {
+          trigReloadTransaction()
+          onClose()
+        }}
         transaction={focusedTransaction}
         categories={context.categories}
         groups={context.groups}

@@ -13,5 +13,8 @@ export function useImportService() {
         },
       })
     },
+    convertToTransactions: async (id) => {
+      return await backendRequest.current.put(`${basePath}/${id}/convert`, {})
+    },
   }
 }
