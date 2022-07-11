@@ -30,7 +30,7 @@ function splitShare(amount, count, precision = 2) {
     count--
 
     // last share when share > amount
-    values.push(share > amount ? share + amount : share)
+    values.push(share > amount ? (share + amount).toFixed(2) : share)
   }
 
   return values
@@ -147,6 +147,7 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
                         name={`paid-${member.value}`}
                         size={4}
                         type='number'
+                        step='0.01'
                         defaultValue={Math.abs(idx == 0 ? transaction.amount : 0)} // First member author of transaction
                       />
                     </div>
@@ -161,6 +162,7 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
                         name={`owed-${member.value}`}
                         size={4}
                         type='number'
+                        step='0.01'
                         defaultValue={membersShares[idx]}
                       />
                     </div>
@@ -218,7 +220,7 @@ export default function Transactions() {
     let mounted = true
     if (!transactionService.isReady) return
 
-    transactionService.readAll({ limit: 500 }).then((data) => {
+    transactionService.readAll({ limit: 30 }).then((data) => {
       if (mounted) {
         console.log(data)
         setTransactions(
