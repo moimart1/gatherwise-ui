@@ -1,5 +1,3 @@
-const updateTokenMinValidity = 30
-
 /**
  * AuthProvider
  */

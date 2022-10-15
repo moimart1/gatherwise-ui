@@ -1,5 +1,5 @@
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { MenuIcon, XIcon } from '@heroicons/react/outline'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import PropTypes from 'prop-types'
 import React, { Fragment, useContext, useState } from 'react'
 import Avatar from 'react-avatar'
@@ -126,9 +126,9 @@ export default function AppFrame({ children, sitePreferences, menuMap, onChangeL
                     >
                       <span className='sr-only'>Open main menu</span>
                       {open ? (
-                        <XIcon className='block h-6 w-6' aria-hidden='true' />
+                        <XMarkIcon className='block h-6 w-6' aria-hidden='true' />
                       ) : (
-                        <MenuIcon className='block h-6 w-6' aria-hidden='true' />
+                        <Bars3Icon className='block h-6 w-6' aria-hidden='true' />
                       )}
                     </Disclosure.Button>
                   </div>

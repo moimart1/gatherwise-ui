@@ -56,7 +56,6 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
         <ModalHeader>Sync transaction</ModalHeader>
         <ModalCloseButton />
         <form
-          p={4}
           onSubmit={(event) => {
             const { _id: transactionId } = transaction
             const formData = new FormData(event.currentTarget)
