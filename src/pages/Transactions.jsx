@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { Select } from 'chakra-react-select'
 import { useEffect, useState } from 'react'
+import { TransactionsTimeline } from '../components/TransactionsTimeline'
 import { useSynchronizationService } from '../services/endpoints/synchronizations'
 import { useTransactionService } from '../services/endpoints/transactions'
 
@@ -296,6 +297,7 @@ export default function Transactions() {
 
   return (
     <div className=''>
+      <TransactionsTimeline />
       {isLoading ? <span className='italic p-3'>Loading...</span> : <span></span>}
       {transactions &&
         Object.keys(transactions).map((transactionDate, index) => {
