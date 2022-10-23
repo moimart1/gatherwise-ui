@@ -222,17 +222,7 @@ export default function Transactions() {
 
     transactionService.readAll({ limit: 30 }).then((data) => {
       if (mounted) {
-        console.log(data)
-        setTransactions(
-          data.reduce((groups, transaction) => {
-            const date = transaction.date.split('T')[0]
-            if (!groups[date]) {
-              groups[date] = []
-            }
-            groups[date].push(transaction)
-            return groups
-          }, {})
-        )
+        setTransactions(data)
       }
     })
 
@@ -297,38 +287,15 @@ export default function Transactions() {
 
   return (
     <div className=''>
-      <TransactionsTimeline />
       {isLoading ? <span className='italic p-3'>Loading...</span> : <span></span>}
-      {transactions &&
-        Object.keys(transactions).map((transactionDate, index) => {
-          return (
-            <div key={`${index}`}>
-              <h2 className='font-bold' key={`title-${index}`}>
-                {transactionDate}
-              </h2>
-              <div className='max-w-md flex flex-col'>
-                {transactions[transactionDate].map((transaction, index) => {
-                  return (
-                    <button
-                      key={index}
-                      className='border rounded m-3 p-2'
-                      onClick={(event) => {
-                        setFocusedTransaction(transaction)
-                        onOpen(event)
-                      }}
-                    >
-                      <div className='text-left'>
-                        <div className=' font-bold'>{transaction.description}</div>
-                        <div className='italic'>{transaction?.sync?.map((sync) => sync.outputName).join(', ')}</div>
-                      </div>
-                      <div className='text-right'>{transaction.amount}$</div>
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-          )
-        })}
+      <TransactionsTimeline
+        data={transactions}
+        onClickTransaction={(transaction, event) => {
+          setFocusedTransaction(transaction)
+          onOpen(event)
+        }}
+      />
+
       <DialogSplitwiseAdd
         isOpen={isOpen}
         onClose={() => {
