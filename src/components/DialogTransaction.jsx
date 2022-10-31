@@ -9,36 +9,15 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure,
 } from '@chakra-ui/react'
 import { Select } from 'chakra-react-select'
-import { useEffect, useState } from 'react'
-import DialogTransaction from '../components/DialogTransaction'
-import { TransactionsTimeline } from '../components/TransactionsTimeline'
+import { useEffect, useRef, useState } from 'react'
+import { splitShare } from '../libs/split-share'
 import { useSynchronizationService } from '../services/endpoints/synchronizations'
 import { useTransactionService } from '../services/endpoints/transactions'
+import Editable from './Editable'
 
-const author = 'Martin'
-
-// Banque 30 décembre Costco
-// Communauto 31 décembre
-
-function splitShare(amount, count, precision = 2) {
-  const values = []
-  while (amount > 0 && count > 0) {
-    let share = Math.floor((amount * Math.pow(10.0, precision)) / count) / Math.pow(10.0, precision)
-
-    amount -= share
-    count--
-
-    // last share when share > amount
-    values.push(share > amount ? (share + amount).toFixed(2) : share)
-  }
-
-  return values
-}
-
-function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, lastSelection, setLastSelection }) {
+export default function DialogTransaction({ isOpen, onClose, transaction, categories, groups, lastSelection, setLastSelection }) {
   const [members, setMembers] = useState(lastSelection?.members ?? [])
   const [error, setError] = useState('')
   const [note, setNote] = useState('')
@@ -51,11 +30,30 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
     onClose()
   }
 
+  const [description, setDescription] = useState(transaction.description)
+  const descriptionRef = useRef()
+
+  useEffect(() => {
+    setDescription(transaction.description)
+  }, [transaction])
+
   return (
     <Modal isOpen={isOpen} onClose={cleanThenClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Sync transaction</ModalHeader>
+        <ModalHeader>
+          <Editable text={description} placeholder='Description' childRef={descriptionRef} type='input'>
+            <input
+              ref={descriptionRef}
+              type='text'
+              name='description'
+              className='border rounded w-full py-2 px-3 text-gray-700 ring-0 focus:border-gray-300 focus:ring-0'
+              placeholder='Write a task name 2'
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </Editable>
+        </ModalHeader>
         <ModalCloseButton />
         <form
           onSubmit={(event) => {
@@ -201,126 +199,5 @@ function DialogSplitwiseAdd({ isOpen, onClose, transaction, categories, groups, 
         </form>
       </ModalContent>
     </Modal>
-  )
-}
-
-export default function Transactions() {
-  const [transactions, setTransactions] = useState([])
-  const [context, setContext] = useState({})
-  const [isLoading, setLoading] = useState(false)
-  const [reloadTransaction, setReloadTransaction] = useState(false)
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const [focusedTransaction, setFocusedTransaction] = useState({})
-  const [lastSelection, setLastSelection] = useState({})
-  const transactionService = useTransactionService()
-  const synchronizationService = useSynchronizationService()
-  const trigReloadTransaction = () => setReloadTransaction(!reloadTransaction)
-
-  // List transactions
-  useEffect(() => {
-    let mounted = true
-    if (!transactionService.isReady) return
-
-    transactionService.readAll({ limit: 30 }).then((data) => {
-      if (mounted) {
-        setTransactions(data)
-      }
-    })
-
-    return () => {
-      mounted = false
-    }
-  }, [transactionService.isReady, reloadTransaction])
-
-  // Get context
-  useEffect(() => {
-    let mounted = true
-    setLoading(true)
-    synchronizationService.getContext().then((data) => {
-      if (mounted) {
-        setLoading(false)
-        setContext({
-          categories: (data?.categories ?? []).reduce((categories, category) => {
-            categories.push({
-              label: category.name,
-              options: (category?.subcategories ?? []).reduce((subcategories, subcategory) => {
-                subcategories.push({
-                  label: subcategory.name,
-                  value: subcategory.id,
-                })
-
-                return subcategories
-              }, []),
-            })
-
-            return categories
-          }, []),
-          // Groups //
-          groups: (data?.groups ?? []).reduce((groups, group) => {
-            groups.push({
-              label: group.name,
-              value: group.id,
-              members: (group?.members ?? [])
-                .reduce((members, member) => {
-                  members.push({
-                    label: `${member.first_name ? member.first_name : ''} ${member.last_name ? member.last_name : ''}`,
-                    value: member.id,
-                  })
-
-                  return members
-                }, [])
-                .sort((x, y) => {
-                  // Workaround to put author at the top // TODO hackish
-                  return x.label.includes(author) ? -1 : y.label.includes(author) ? 1 : 0
-                }),
-            })
-
-            return groups
-          }, []),
-        })
-      }
-    })
-
-    return () => {
-      mounted = false
-    }
-  }, [synchronizationService.isReady])
-
-  return (
-    <div className=''>
-      {isLoading ? <span className='italic p-3'>Loading...</span> : <span></span>}
-      <TransactionsTimeline
-        data={transactions}
-        onClickTransaction={(transaction, event) => {
-          setFocusedTransaction(transaction)
-          onOpen(event)
-        }}
-      />
-
-      {/* <DialogSplitwiseAdd
-        isOpen={isOpen}
-        onClose={() => {
-          trigReloadTransaction()
-          onClose()
-        }}
-        transaction={focusedTransaction}
-        categories={context.categories}
-        groups={context.groups}
-        lastSelection={lastSelection}
-        setLastSelection={setLastSelection}
-      /> */}
-      <DialogTransaction
-        isOpen={isOpen}
-        onClose={() => {
-          trigReloadTransaction()
-          onClose()
-        }}
-        transaction={focusedTransaction}
-        categories={context.categories}
-        groups={context.groups}
-        lastSelection={lastSelection}
-        setLastSelection={setLastSelection}
-      />
-    </div>
   )
 }
