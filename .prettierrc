@@ -1,4 +1,8 @@
 {
+  "plugins": [
+    "prettier-plugin-tailwindcss"
+  ],
+  "tailwindConfig": "./tailwind.config.js",
   "arrowParens": "always",
   "bracketSpacing": true,
   "htmlWhitespaceSensitivity": "css",
@@ -15,5 +19,6 @@
   "trailingComma": "es5",
   "useTabs": false,
   "vueIndentScriptAndStyle": false,
-  "endOfLine": "lf"
+  "endOfLine": "lf",
+  "experimentalTernaries": true
 }

@@ -5,36 +5,44 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Current Test File",
+      "autoAttachChildProcesses": true,
+      "skipFiles": [
+        "<node_internals>/**",
+        "**/node_modules/**"
+      ],
+      "program": "${workspaceRoot}/node_modules/vitest/vitest.mjs",
+      "args": [
+        "run",
+        "--test-timeout",
+        "${relativeFile}"
+      ],
+      "smartStep": true,
+      "console": "integratedTerminal"
+    },
+    {
       "type": "firefox",
       "request": "launch",
       "reAttach": true,
       "name": "Vite: Firefox",
-      "url": "http://localhost:3002",
+      "url": "http://localhost:3001",
       "webRoot": "${workspaceFolder}/src",
       "pathMappings": [
         {
-          "url": "file://",
-          "path": ""
+          "url": "http://localhost:3001/src",
+          "path": "${workspaceFolder}/src"
+        },
+        {
+          "url": "http://localhost:3001/common",
+          "path": "${workspaceFolder}/common"
+        },
+        {
+          "url": "http://localhost:3002/node_modules",
+          "path": "${workspaceFolder}/node_modules"
         }
       ]
-    },
-    {
-      "type": "node",
-      "name": "vscode-jest-tests",
-      "request": "launch",
-      "program": "${workspaceFolder}/node_modules/.bin/jest",
-      "args": [
-        "--runInBand",
-        "--watchAll=false",
-        "--timeout=300000"
-      ],
-      "cwd": "${workspaceFolder}",
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "disableOptimisticBPs": true,
-      "windows": {
-        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
-      }
     },
     {
       "type": "node",

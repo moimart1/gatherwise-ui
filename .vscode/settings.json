@@ -4,6 +4,7 @@
     "source.organizeImports",
     "source.fixAll.eslint"
   ],
+  "editor.indentSize": 2,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -16,7 +17,9 @@
     "titleBar.activeBackground": "#eb6e25",
     "titleBar.inactiveBackground": "#eb6e25cc"
   },
-  "jira-plugin.workingProject": "",
-  "jest.autoRun": "off",
-  "editor.rulers": [130]
+  "editor.rulers": [130],
+  "jest.enable": false,
+  "cSpell.words": [
+    "signin"
+  ]
 }
