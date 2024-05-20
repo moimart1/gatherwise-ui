@@ -6,10 +6,10 @@ export default function LanguageSelect({ lang, onChangeLanguage }) {
       <select
         defaultValue={lang}
         onChange={onChangeLanguage}
-        inputProps={{
-          name: 'lang',
-          id: 'uncontrolled-native',
-        }}
+        // inputProps={{
+        //   name: 'lang',
+        //   id: 'uncontrolled-native',
+        // }}
       >
         {allLanguages.map((language, index) => {
           return (
