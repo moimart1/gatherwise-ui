@@ -1,37 +1,30 @@
-import { useState } from 'react'
-import { useRoutes } from 'react-router-dom'
+import { ApplicationContextProvider } from '@gatherwise/common-frontend-libs/components/ApplicationContext'
+import { AuthModule } from '@gatherwise/common-frontend-libs/libs/authentication'
+import { gatherwiseMidnightSolid } from '@gatherwise/common-frontend-libs/logos'
+import { useEffect } from 'react'
 import './App.css'
-import AuthProvider from './components/AuthProvider'
 import addIcons from './libs/add-icons'
-import { langEnum, LanguageContext } from './libs/localization'
-import { compileRoutes } from './libs/routes'
-import logoFull from './logos/logo-full.svg'
-import routes from './routes'
+import './libs/localization'
+import { getRouter } from './routes'
 
 addIcons()
+AuthModule.setClientId('frontend')
 
 const sitePreferences = {
-  title: 'Gatherwise',
-  logo: logoFull,
+  title: 'Admin',
+  logo: gatherwiseMidnightSolid,
 }
 
-function App() {
-  const [lang, setLang] = useState(langEnum.en)
-  const onChangeLanguage = (event) => {
-    setLang(event.target.value)
-  }
+const router = getRouter({ sitePreferences })
 
-  const currentPage = useRoutes(compileRoutes(routes({ lang }), { sitePreferences, onChangeLanguage }))
+export default function App() {
+  useEffect(() => {
+    console.log('[App] initialized')
+    return () => {
+      console.log('[App] cleaned')
+    }
+  }, []) // Global unmount
 
-  return (
-    <>
-      <LanguageContext.Provider value={lang}>
-        <AuthProvider clientId='frontend' lang={lang}>
-          {currentPage}
-        </AuthProvider>
-      </LanguageContext.Provider>
-    </>
-  )
+  console.log('[App] loaded')
+  return <ApplicationContextProvider router={router} />
 }
-
-export default App

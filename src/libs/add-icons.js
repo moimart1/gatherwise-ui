@@ -1,12 +1,15 @@
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit'
+import { faPlus as fasPlus, faUser as fasUser } from '@fortawesome/free-solid-svg-icons'
+import addCommonIcons, { library } from '@gatherwise/common-frontend-libs/libs/icons'
 
 const addIcons = () => {
+  // Add common icons
+  addCommonIcons()
+
   // NOTE importing icons into a library makes them available
   // in any child component without importing again
 
-  // NOTE add free solid
-  library.add(faEdit)
+  // Solid
+  library.add(fasUser, fasPlus)
 }
 
 export default addIcons
