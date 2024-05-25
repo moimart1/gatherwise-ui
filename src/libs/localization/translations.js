@@ -1,76 +1,139 @@
-export const langEnum = {
-  en: 'en',
-  fr: 'fr',
-  es: 'es',
-}
+import { langEnum } from '@gatherwise/common-frontend-libs/libs/localization'
 
 export default {
-  english: {
-    [langEnum.fr]: 'anglais',
-    [langEnum.es]: 'inglés',
+  'create company': {
+    [langEnum.fr]: 'créer compagnie',
+    [langEnum.es]: 'crear compañía',
   },
-  french: {
-    [langEnum.fr]: 'français',
-    [langEnum.es]: 'francés',
+  'create new gateway': {
+    [langEnum.fr]: 'créer une nouvelle passerelle',
+    [langEnum.es]: 'crear nueva puerta de enlace',
   },
-  spanish: {
-    [langEnum.fr]: 'espagnol',
-    [langEnum.es]: 'español',
+  'create new workstation': {
+    [langEnum.fr]: 'créer une nouvelle station de travail',
+    [langEnum.es]: 'crear nueva estación de trabajo',
   },
-  home: {
-    [langEnum.fr]: 'accueil',
-    [langEnum.es]: 'inicio',
+  company: {
+    [langEnum.fr]: 'compagnie',
+    [langEnum.es]: 'compañía',
   },
-  gateway: {
-    [langEnum.fr]: 'passerelle',
-    [langEnum.es]: 'puerta de enlace',
+  companies: {
+    [langEnum.fr]: 'compagnies',
+    [langEnum.es]: 'compañías',
   },
-  gateways: {
-    [langEnum.fr]: 'passerelles',
-    [langEnum.es]: 'puertas de enlace',
+  'select a company': {
+    [langEnum.fr]: 'sélectionner une compagnie',
+    [langEnum.es]: 'seleccione una compañía',
   },
-  workstation: {
-    [langEnum.fr]: 'station de travail',
-    [langEnum.es]: 'estación de trabajo',
+  'GIT deployment': {
+    [langEnum.fr]: 'GIT déploiement',
+    [langEnum.es]: 'GIT despliegue',
   },
-  workstations: {
-    [langEnum.fr]: 'stations de travail',
-    [langEnum.es]: 'estacións de trabajo',
+  'rancher cluster': {
+    [langEnum.fr]: 'rancher cluster',
+    [langEnum.es]: 'rancher cluster',
   },
-  delete: {
-    [langEnum.fr]: 'supprimer',
-    [langEnum.es]: 'eliminar',
+  'keycloak realm': {
+    [langEnum.fr]: 'royaume Keycloak',
+    [langEnum.es]: 'reino Keycloak',
   },
-  redirect: {
-    [langEnum.fr]: 'redirection',
-    [langEnum.es]: 'redirigir',
+  'view machine data': {
+    [langEnum.fr]: 'afficher les données machine',
+    [langEnum.es]: 'ver datos de la máquina',
   },
-  'install docker': {
-    [langEnum.fr]: 'install docker', // TODO
-    [langEnum.es]: 'install docker', // TODO
+  'monitoring & OPS': {
+    [langEnum.fr]: 'monitoring & OPS',
+    [langEnum.es]: 'monitoring & OPS',
   },
-  'you can install docker by following this ': {
-    [langEnum.fr]: 'you can install docker by following this ', // TODO
-    [langEnum.es]: 'you can install docker by following this ', // TODO
+  'connect machines': {
+    [langEnum.fr]: 'connecter les machines ',
+    [langEnum.es]: 'conectar maquinas',
   },
-  'official documentation': {
-    [langEnum.fr]: 'official documentation', // TODO
-    [langEnum.es]: 'official documentation', // TODO
+  user: {
+    [langEnum.fr]: 'utilisateur',
+    [langEnum.es]: 'user', // TODO
   },
-  'get link': {
-    [langEnum.fr]: 'obtenir le lien',
-    [langEnum.es]: 'get link', // TODO
+  admin: {
+    [langEnum.fr]: 'admin',
+    [langEnum.es]: 'admin',
   },
-  loading: {
-    [langEnum.fr]: 'chargement',
-    [langEnum.es]: 'loading', // TODO
+  email: {
+    [langEnum.fr]: 'email',
+    [langEnum.es]: 'email',
   },
-  'getting started': {
-    [langEnum.fr]: 'getting started', // TODO
-    [langEnum.es]: 'getting started', // TODO
+  role: {
+    [langEnum.fr]: 'role',
+    [langEnum.es]: 'role',
   },
-  'return to homepage': {
-    [langEnum.fr]: "retourner à l'accueil",
-    [langEnum.es]: 'return to homepage', // TODO
+  'my companies': {
+    [langEnum.fr]: 'mes compagnies',
+    [langEnum.es]: 'my companies', // TODO
+  },
+  users: {
+    [langEnum.fr]: 'utilisateurs',
+    [langEnum.es]: 'users', // TODO
+  },
+  'please note the following information, this is the last time you will see it': {
+    [langEnum.fr]: "veuillez noter les informations suivantes, c'est la dernière fois que vous les verrez",
+    [langEnum.es]: 'tenga en cuenta la siguiente información, esta es la última vez que la verá',
+  },
+  'revoke from company': {
+    [langEnum.fr]: 'retirer de la compagnie',
+    [langEnum.es]: 'revoke from company', // TODO
+  },
+  'reset password': {
+    [langEnum.fr]: 'réinitialiser le mot de passe',
+    [langEnum.es]: 'reset password', // TODO
+  },
+  'registration link': {
+    [langEnum.fr]: "lien d'inscription",
+    [langEnum.es]: 'registration link', // TODO
+  },
+  'show invitation link': {
+    [langEnum.fr]: "afficher le lien d'inscription",
+    [langEnum.es]: 'show invitation link', // TODO
+  },
+  'share the link with the company admin. The company administrator will be prompted to create a new company which will be visible in your list of companies':
+    {
+      [langEnum.fr]:
+        "partagez le lien avec l'administrateur de la compagnie. L'administrateur de la compagnie va être invité à créer une nouvelle compagnie qui sera visible dans votre liste de compagnies",
+      [langEnum.es]:
+        'share the link with the company admin. The company administrator will be prompted to create a new company which will be visible in your list of companies', // TODO
+    },
+  'Note: if the user has not email, you can create a fake email like ': {
+    [langEnum.fr]: "Note: si l'utilisateur n'a pas d'e-mail, vous pouvez créer un faux e-mail comme ",
+    [langEnum.es]: 'Note: if the user has not email, you can create a fake email like ', // TODO
+  },
+  join: {
+    [langEnum.fr]: 'rejoindre',
+    [langEnum.es]: 'join', // TODO
+  },
+  joined: {
+    [langEnum.fr]: 'rejoint',
+    [langEnum.es]: 'joined', // TODO
+  },
+  leave: {
+    [langEnum.fr]: 'quitter',
+    [langEnum.es]: 'leave', // TODO
+  },
+  dissociate: {
+    [langEnum.fr]: 'se retirer',
+    [langEnum.es]: 'dissociate', // TODO
+  },
+  'before you start, you need to create an environment with the company name': {
+    [langEnum.fr]: "avant de commencer, vous devez créer un environnement avec le nom de l'entreprise",
+    [langEnum.es]: 'before you start, you need to create an environment with the company name',
+  },
+  'create a new environment for the application': {
+    [langEnum.fr]: "créer un nouvel environnement pour l'application",
+    [langEnum.es]: 'create a new environment for the application',
+  },
+  'can take few minutes': {
+    [langEnum.fr]: 'peut prendre quelques minutes',
+    [langEnum.es]: 'can take few minutes',
+  },
+  'creation of the new environment with dedicated security keys': {
+    [langEnum.fr]: 'création du nouvel environnement avec des clés de sécurité dédiées',
+    [langEnum.es]: 'creating the new environment with dedicated security keys',
   },
 }

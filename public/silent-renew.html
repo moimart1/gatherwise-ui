@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<body>
+    <script>
+        parent.postMessage(
+            {
+                source: "oidc-client",
+                url: window.location.href,
+                keepOpen: false,
+            },
+            window.location.origin
+        );
+    </script>
+</body>
+
+</html>

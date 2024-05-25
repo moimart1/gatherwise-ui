@@ -1,0 +1,8 @@
+{
+    "name": "admin-frontend",
+    "version": "${APP_FULLVERSION}",
+    "buildDate": "${APP_BUILD_DATE}",
+    "startDate": "${APP_START_DATE}",
+    "branchName": "${APP_BRANCH_NAME}",
+    "commitHash": "${APP_COMMIT_HASH}"
+}

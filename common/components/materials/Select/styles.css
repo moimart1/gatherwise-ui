@@ -1,0 +1,3 @@
+.MachineSelectGroupHeading:hover .MachineSelectGroupButton {
+  backdrop-filter: brightness(95%);
+}

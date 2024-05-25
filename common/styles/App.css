@@ -1,0 +1,31 @@
+/* */
+@import url('https://fonts.googleapis.com/css?family=Inter:300,300i,400,700,800');
+@import url('https://fonts.googleapis.com/css?family=Oswald:300,300i,400,700,800');
+
+@tailwind base;
+@layer base {
+  *,
+  ::before,
+  ::after {
+    @apply border-midnight-200;
+  }
+
+  html {
+    @apply text-midnight;
+  }
+}
+@tailwind components;
+@tailwind utilities;
+
+
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
