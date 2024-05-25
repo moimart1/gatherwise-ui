@@ -1,22 +1,10 @@
 /* */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('./../common/styles/App.css');
 
-body {
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-}
-
-input {
-  @apply focus:!ring-0 focus:!ring-offset-0;
-}
-
-/* .without-ring {
-  @apply focus:ring-0 focus:ring-offset-0;
-} */
+.username {
+    position: absolute;
+    left: -5000px;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+  }
