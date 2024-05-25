@@ -1,18 +1,18 @@
 import { ApplicationContextProvider } from '@gatherwise/common-frontend-libs/components/ApplicationContext'
 import { AuthModule } from '@gatherwise/common-frontend-libs/libs/authentication'
-import { gatherwiseMidnightSolid } from '@gatherwise/common-frontend-libs/logos'
 import { useEffect } from 'react'
 import './App.css'
 import addIcons from './libs/add-icons'
 import './libs/localization'
+import logoFull from './logos/logo-full.svg'
 import { getRouter } from './routes'
 
 addIcons()
 AuthModule.setClientId('frontend')
 
 const sitePreferences = {
-  title: 'Admin',
-  logo: gatherwiseMidnightSolid,
+  title: 'Gatherwise',
+  logo: logoFull,
 }
 
 const router = getRouter({ sitePreferences })
