@@ -1,17 +1,18 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { localize } from '../libs/localization'
 
-export default function Loading({ lang, showReload = false }) {
+export default function Loading({ showReload = false }) {
+  const { t } = useTranslation('pages/loading')
   return (
-    <div className='w-full text-center p-8'>
-      <p className='text-xl font-bold text-gray-500 p-4'>{localize('loading')(lang)}...</p>
+    <div className='w-full p-8 text-center'>
+      <p className='p-4 text-xl font-bold text-gray-500'>{t('loading')}...</p>
       {showReload && (
         <div className='space-x-4'>
           <button {...{ onClick: () => {} }}>
-            <Link to={'/'}>{localize('return to homepage')(lang)}</Link>
+            <Link to={'/'}>{t('return-to-homepage')}</Link>
           </button>
-          <button onClick={() => window.location.reload()}>{localize('reload')(lang)}</button>
+          <button onClick={() => window.location.reload()}>Reload</button>
         </div>
       )}
     </div>
